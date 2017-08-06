@@ -1,19 +1,66 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AutoComplete from 'material-ui/AutoComplete';
+import Item from "./Item";
+
+const cities = [
+  "Houston",
+  "Atlanta",
+  "Belo Horizonte"
+]
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.state = {search: "", errorText: "", frontPage: true};
+  }
+
+  updateState(event){
+    this.setState({search: event.target.value})
+  }
+
+  handleSubmit(event){
+    console.log(document.getElementById("search").value);
+    event.preventDefault();
+  }
+
+  handleClose(event){
+    console.log(document.getElementById("search").value);
+    this.setState({frontPage: false})
+    this.setState({errorText: "We do not support this city yet. Contribute!"})
+  }
+
+  clearError(event){
+    this.setState({errorText: ""})
+  }
+
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <MuiThemeProvider>
+        {this.state.frontPage ? 
+        <div className="Main">
+            <div>
+              <form onSubmit={this.handleSubmit}>
+                <AutoComplete id="search" onFocus={event => this.clearError(event)} floatingLabelText="Enter city name" dataSource={cities} filter={AutoComplete.caseInsensitiveFilter} onClose={event => this.handleClose(event)} errorText={this.state.errorText}/>
+              </form>
+            </div>
+          </div>:
+        <div className="All">
+          <div className="Main">
+            <div>
+              <form onSubmit={this.handleSubmit}>
+                <AutoComplete id="search" onFocus={event => this.clearError(event)} floatingLabelText="Enter city name" dataSource={cities} filter={AutoComplete.caseInsensitiveFilter} onClose={event => this.handleClose(event)} errorText={this.state.errorText}/>
+              </form>
+            </div>
+          </div>
+          <div className="Main">
+            <div className="Items">
+              <Item title="test" subtitle="test"/>
+            </div>
+          </div>
+        </div>}
+      </MuiThemeProvider>
     );
   }
 }
