@@ -5,16 +5,16 @@ import {default as FaSpinner} from "react-icons/lib/fa/spinner";
 import _ from "lodash";
 import Helmet from "react-helmet";
 import "./Map.css";
+import axios from "axios"
 
 
 
 
- 
 // Wrap all `react-google-maps` components with `withGoogleMap` HOC
 // then wraps it into `withScriptjs` HOC
 // It loads Google Maps JavaScript API v3 for you asynchronously.
 // Name the component AsyncGettingStartedExampleGoogleMap
-const AsyncGettingStartedExampleGoogleMap = withScriptjs(
+const AsyncGoogleMap = withScriptjs(
   withGoogleMap(
     props => (
       <GoogleMap
@@ -31,7 +31,6 @@ const AsyncGettingStartedExampleGoogleMap = withScriptjs(
         ))}
         <Polyline
           {...props.polylines}
-          {...console.log(props.polylines)}
         />
       </GoogleMap>
     )
@@ -39,28 +38,45 @@ const AsyncGettingStartedExampleGoogleMap = withScriptjs(
 );
 // Then, render it:
 
-export default class GettingStartedExample extends Component {
-
-  state = {
-    markers: [{
-      position: {
-        lat: -25.363882, 
-        lng: 131.044922
+export default class Map extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      markers: [{
+        position: {
+          lat: -25.363882, 
+          lng: 131.044922
+        },
+        defaultAnimation: 2,
+      }],
+      polylines: {
+        path: [],
+        options: {
+        geodesic: true,
+        strokeColor: "#FF0000",
+        strokeOpacity: 1.0,
+        strokeWeight: 2}
       },
-      defaultAnimation: 2,
-    }],
-    polylines: {
-      path: [{lat: 37.772, lng: -122.214},
-      {lat: 21.291, lng: -157.821},
-      {lat: -18.142, lng: 178.431},
-      {lat: -27.467, lng: 153.027}],
-      options: {
-      geodesic: true,
-      strokeColor: "#FF0000",
-      strokeOpacity: 1.0,
-      strokeWeight: 2}
-    },
-  };
+    };
+    var data = {place: this.props.place};
+    var base_url = process.env.PUBLIC_URL || 'http://localhost:8000';
+    axios.post(base_url + "/api/coords", data)
+      .then((result) =>
+        this.setState({
+          polylines: {
+            path: result.data,
+            options: {
+            geodesic: true,
+            strokeColor: "#FF0000",
+            strokeOpacity: 1.0,
+            strokeWeight: 2}
+          }
+        })
+      )
+      .catch((error) =>
+        console.log(error)
+      )
+  }
 
   handleMapLoad = this.handleMapLoad.bind(this);
   handleMapClick = this.handleMapClick.bind(this);
@@ -114,9 +130,9 @@ export default class GettingStartedExample extends Component {
     return (
       <div className="mapSize">
         <Helmet
-          title="Getting Started"
+          title="Map"
         />
-        <AsyncGettingStartedExampleGoogleMap
+        <AsyncGoogleMap
           googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCY0-PU1_-1lGKuQyJNuFWKBrA_LPM2bYw"
           loadingElement={
             <div style={{ height: `100%` }}>
