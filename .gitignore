@@ -57,3 +57,5 @@ typings/
 # dotenv environment variables file
 .env
 
+src/maps_api_key.txt
+

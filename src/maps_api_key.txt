@@ -1,0 +1,4 @@
+AIzaSyCY0-PU1_-1lGKuQyJNuFWKBrA_LPM2bYw
+
+
+heroku pg:backups:restore 'https://s3-us-west-2.amazonaws.com/wheretobike/wheretobike.dump' DATABASE_URL  -a wheretobike
