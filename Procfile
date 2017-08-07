@@ -1,1 +1,1 @@
-web: node wheretobike/backend.js
+web: node backend.js
