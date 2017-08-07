@@ -3,12 +3,17 @@ import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AutoComplete from 'material-ui/AutoComplete';
 import Item from "./Item";
+import fire from './fire';
 
 const cities = [
   "Houston",
   "Atlanta",
   "Belo Horizonte"
 ]
+
+var styles = {
+  color: "black"
+}
 
 class App extends Component {
   constructor(props){

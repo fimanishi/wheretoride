@@ -6,6 +6,9 @@ import _ from "lodash";
 import Helmet from "react-helmet";
 import "./Map.css";
 
+
+
+
  
 // Wrap all `react-google-maps` components with `withGoogleMap` HOC
 // then wraps it into `withScriptjs` HOC
@@ -20,8 +23,8 @@ const AsyncGettingStartedExampleGoogleMap = withScriptjs(
         defaultCenter={{ lat: -25.363882, lng: 131.044922 }}
         onClick={props.onMapClick}
       >
-        {props.markers.map(marker => (
-          <Marker
+        {props.markers.map((marker, index) => (
+          <Marker key={index}
             {...marker}
             onRightClick={() => props.onMarkerRightClick(marker)}
           />
@@ -41,10 +44,9 @@ export default class GettingStartedExample extends Component {
   state = {
     markers: [{
       position: {
-        lat: 25.0112183,
-        lng: 121.52067570000001,
+        lat: -25.363882, 
+        lng: 131.044922
       },
-      key: `Taiwan`,
       defaultAnimation: 2,
     }],
     polylines: {
@@ -52,10 +54,11 @@ export default class GettingStartedExample extends Component {
       {lat: 21.291, lng: -157.821},
       {lat: -18.142, lng: 178.431},
       {lat: -27.467, lng: 153.027}],
+      options: {
       geodesic: true,
-      strokeColor: "red",
+      strokeColor: "#FF0000",
       strokeOpacity: 1.0,
-      strokeWeight: 2
+      strokeWeight: 2}
     },
   };
 
