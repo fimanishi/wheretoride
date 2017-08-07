@@ -16,12 +16,17 @@ const db = pgp(process.env.DATABASE_URL||{
   user: 'postgres',
 });
 
+var coords = [];
+
 db.any(`SELECT lat, lng FROM coordinates WHERE cities_id = 1`)
   .then(function(results){
     results.forEach(function (item){
-      console.log(item);
+      coords.push(item);
     })
+    console.log(coords);
   })
+
+
 
 app.use(express.static('build'));
 
