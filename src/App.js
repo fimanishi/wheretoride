@@ -68,6 +68,11 @@ class App extends Component {
           </div>
           <div className="Main">
             <div className="Items">
+              <p>Results for {this.state.city}:</p>
+            </div>
+          </div>
+          <div className="MainList">
+            <div className="ItemsList">
               <Item city={this.state.city} subtitle="test"/>
             </div>
           </div>
