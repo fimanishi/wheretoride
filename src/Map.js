@@ -19,14 +19,14 @@ const AsyncGoogleMap = withScriptjs(
     props => (
       <GoogleMap
         ref={props.onMapLoad}
-        defaultZoom={3}
-        defaultCenter={{ lat: -25.363882, lng: 131.044922 }}
+        defaultZoom={13}
+        defaultCenter={props.center}
         onClick={props.onMapClick}
       >
         {props.markers.map((marker, index) => (
           <Marker key={index}
             {...marker}
-            onRightClick={() => props.onMarkerRightClick(marker)}
+            onClick={() => props.onMarkerClick(marker.position)}
           />
         ))}
         <Polyline
@@ -42,13 +42,7 @@ export default class Map extends Component {
   constructor(props){
     super(props);
     this.state = {
-      markers: [{
-        position: {
-          lat: -25.363882, 
-          lng: 131.044922
-        },
-        defaultAnimation: 2,
-      }],
+      markers: [],
       polylines: {
         path: [],
         options: {
@@ -58,13 +52,14 @@ export default class Map extends Component {
         strokeWeight: 2}
       },
     };
-    var data = {place: this.props.place};
+    var data = {place: props.place};
     var base_url = process.env.PUBLIC_URL || 'http://localhost:8000';
     axios.post(base_url + "/api/coords", data)
       .then((result) =>
         this.setState({
+          markers: result.data.markers,
           polylines: {
-            path: result.data,
+            path: result.data.coords,
             options: {
             geodesic: true,
             strokeColor: "#FF0000",
@@ -76,11 +71,13 @@ export default class Map extends Component {
       .catch((error) =>
         console.log(error)
       )
+      console.log(props.center);
+      console.log(props.place);
   }
 
   handleMapLoad = this.handleMapLoad.bind(this);
   handleMapClick = this.handleMapClick.bind(this);
-  handleMarkerRightClick = this.handleMarkerRightClick.bind(this);
+  handleMarkerClick = this.handleMarkerClick.bind(this);
 
   handleMapLoad(map) {
     this._mapComponent = map;
@@ -114,16 +111,13 @@ export default class Map extends Component {
     }
   }
 
-  handleMarkerRightClick(targetMarker) {
+  handleMarkerClick(targetMarker) {
     /*
      * All you modify is data, and the view is driven by data.
      * This is so called data-driven-development. (And yes, it's now in
      * web front end and even with google maps API.)
      */
-    const nextMarkers = this.state.markers.filter(marker => marker !== targetMarker);
-    this.setState({
-      markers: nextMarkers,
-    });
+    console.log(targetMarker);
   }
 
   render() {
@@ -157,7 +151,8 @@ export default class Map extends Component {
           onMapClick={_.noop}
           markers={this.state.markers}
           polylines={this.state.polylines}
-          onMarkerRightClick={_.noop}
+          onMarkerClick={this.handleMarkerClick}
+          center={this.props.center}
         />
       </div>
     );

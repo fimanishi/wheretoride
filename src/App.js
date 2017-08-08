@@ -24,34 +24,26 @@ class App extends Component {
     this.setState( { searchText: '' })
   }
 
-  handleSubmit(event){
-    event.preventDefault();
-    var temp = this.state.searchText.toLowerCase();
-    cities.forEach(item => {
-      if (item.toLowerCase() === temp){
-        this.setState({frontPage: false, city: temp, searchText: "", error: false});
-      }
-    })
-    if (this.state.error){
-    this.setState({errorText: "We do not support this city yet. Contribute!"})
-    }
-    else{
-      this.setState({error: true})
-    }
-  }
-
   handleClose(event){
     var temp = this.state.searchText.toLowerCase();
-    cities.forEach(item => {
-      if (item.toLowerCase() === temp){
-        this.setState({frontPage: false, city: item, searchText: "", error: false});
+    if (temp !== ""){
+      var error = true;
+      cities.forEach(item => {
+        if (item.toLowerCase() === temp){
+          this.setState({frontPage: false, city: temp, searchText: "", error: false});
+          error = false;
+        }
+      })
+      if (error){
+      this.setState({errorText: "We do not support this city yet. Contribute!"})
       }
-    })
-    if (this.state.error){
-    this.setState({errorText: "We do not support this city yet. Contribute!"})
+      else{
+        this.setState({error: true, errorText: ""})
+      }
+      document.querySelector("#search").blur();
     }
     else{
-      this.setState({error: true})
+      document.querySelector("#search").blur();
     }
   }
 
@@ -65,22 +57,18 @@ class App extends Component {
         {this.state.frontPage ? 
         <div className="Main">
             <div>
-              <form onSubmit={this.handleSubmit}>
-                <AutoComplete id="search" onFocus={event => this.clearError(event)} searchText={this.state.searchText} onNewRequest={this.handleSelect.bind(this)} onUpdateInput={this.handleUpdateInput.bind(this)} floatingLabelText="Enter city name" dataSource={cities} filter={AutoComplete.caseInsensitiveFilter} onClose={event => this.handleClose(event)} errorText={this.state.errorText}/>
-              </form>
+              <AutoComplete id="search" onFocus={event => this.clearError(event)} searchText={this.state.searchText} onNewRequest={this.handleSelect.bind(this)} onUpdateInput={this.handleUpdateInput.bind(this)} floatingLabelText="Enter city name" dataSource={cities} filter={AutoComplete.caseInsensitiveFilter} onClose={event => this.handleClose(event)} errorText={this.state.errorText}/>
             </div>
           </div>:
         <div className="All">
           <div className="Main">
             <div>
-              <form onSubmit={this.handleSubmit}>
-                <AutoComplete id="search" onFocus={event => this.clearError(event)} searchText={this.state.searchText} onNewRequest={this.handleSelect.bind(this)} onUpdateInput={this.handleUpdateInput.bind(this)} floatingLabelText="Enter city name" dataSource={cities} filter={AutoComplete.caseInsensitiveFilter} onClose={event => this.handleClose(event)} errorText={this.state.errorText}/>
-              </form>
+              <AutoComplete id="search" onFocus={event => this.clearError(event)} searchText={this.state.searchText} onNewRequest={this.handleSelect.bind(this)} onUpdateInput={this.handleUpdateInput.bind(this)} floatingLabelText="Enter city name" dataSource={cities} filter={AutoComplete.caseInsensitiveFilter} onClose={event => this.handleClose(event)} errorText={this.state.errorText}/>
             </div>
           </div>
           <div className="Main">
             <div className="Items">
-              <Item title={this.state.city} subtitle="test"/>
+              <Item city={this.state.city} subtitle="test"/>
             </div>
           </div>
         </div>}

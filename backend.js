@@ -5,6 +5,10 @@ const promise = require('bluebird');
 const pgp = require('pg-promise')({
   promiseLib: promise,
 });
+const body_parser = require('body-parser');
+
+app.use(body_parser.urlencoded({extended: false}));
+app.use(body_parser.json());
 
 // pgp.pg.defaults.ssl = true;
 
@@ -21,15 +25,25 @@ app.use(express.static('build'));
 app.use(cors());
 
 app.post('/api/coords', function (req, res) {
-  db.any(`SELECT lat, lng FROM coordinates WHERE places_id = 1`)
+  var place = req.body.place;
+  var coords;
+  var markers = [];
+  db.any(`SELECT lat, lng FROM coordinates WHERE places_id = '${place}'`)
   .then(function(results){
-    console.log(results);
-    res.json(results);
+    coords = results;
+    return db.any(`SELECT lat, lng FROM markers WHERE places_id = '${place}'`); 
+  })
+  .then(function(results2){
+    results2.forEach(item =>{
+      markers.push({position: {lat: item.lat, lng: item.lng}, defaultAnimation: 2})
+    })
+    res.json({coords: coords, markers: markers});
   })
 });
 
 app.post('/api/places', function (req, res) {
-  db.any(`SELECT id, location FROM places WHERE cities_id = 1`)
+  var city = req.body.city.toLowerCase();
+  db.any(`SELECT places.id, location, lat, lng FROM places INNER JOIN cities ON places.cities_id = cities.id WHERE cities.city = '${city}'`)
   .then(function(results){
     res.json(results);
   })
