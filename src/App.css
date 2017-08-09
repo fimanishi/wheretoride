@@ -26,9 +26,39 @@
   align-items: center;
   height: 100%;
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .ItemsList {
+  width: 100%;
+  margin: 0;
+}
+
+.alignCenter {
+  text-align: center;
+}
+
+.alignVert {
+  display: block;
+  text-align: center;
+}
+
+input {
+  margin-top: 0;
+}
+
+#bigLogo {
+  width: 324px;
+  height: 200px;
+}
+
+@media screen and (min-width: 780px) {
+#bigLogo {
+  width: 440px;
+  height: 272px;
+}
+.ItemsList {
   width: 60%;
   margin: 0 auto 0 auto;
+}
 }

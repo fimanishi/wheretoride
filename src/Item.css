@@ -1,3 +1,14 @@
 .listItem:hover {
   cursor: pointer;
 }
+
+.flexHorizontal {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px 10px 16px;
+  font-size: 0.8em;
+}
+
+p {
+  margin: 0 0;
+}

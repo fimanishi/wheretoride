@@ -6,6 +6,7 @@ import axios from "axios"
 import "./Item.css"
 
 
+
 class Item extends Component{
     constructor(props){
         super(props);
@@ -65,7 +66,14 @@ class Item extends Component{
                 <div>
                     {this.state.places.map(item => 
                     <Card key={item.id} className="md-card listItem">
-                        <CardTitle title={this.titleCase(item.location)} subtitle={this.props.subtitle} onClick={event => this.itemDisplay(item.id)}/>
+                        <div onClick={event => this.itemDisplay(item.id)}>
+                            <CardTitle title={this.titleCase(item.location)}/>
+                            <div className="flexHorizontal">
+                                <p>Distance: {item.distance}mi</p>
+                                <p>Terrain: {item.path}</p>
+                                <p>Difficulty: {item.difficulty}</p>
+                            </div>
+                        </div>
                         {this.state.places[item.id-1].visible ?
                         <div>
                             <Map center={{lat: item.lat, lng: item.lng}} place={item.id}/>

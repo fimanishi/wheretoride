@@ -10,7 +10,7 @@ const body_parser = require('body-parser');
 app.use(body_parser.urlencoded({extended: false}));
 app.use(body_parser.json());
 
-// pgp.pg.defaults.ssl = true;
+pgp.pg.defaults.ssl = true;
 
 const db = pgp(process.env.DATABASE_URL||{
   host: 'localhost',
@@ -43,7 +43,7 @@ app.post('/api/coords', function (req, res) {
 
 app.post('/api/places', function (req, res) {
   var city = req.body.city.toLowerCase();
-  db.any(`SELECT places.id, location, lat, lng FROM places INNER JOIN cities ON places.cities_id = cities.id WHERE cities.city = '${city}'`)
+  db.any(`SELECT places.id, location, lat, lng, distance, path, difficulty FROM places INNER JOIN cities ON places.cities_id = cities.id WHERE cities.city = '${city}'`)
   .then(function(results){
     res.json(results);
   })
